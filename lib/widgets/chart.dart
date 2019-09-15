@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import './chart_bar.dart';
 import '../models/transaction.dart';
 
 class Chart extends StatelessWidget {
-
   final List<Transaction> _recentTransactions;
-
 
   Chart(this._recentTransactions);
 
@@ -19,16 +18,21 @@ class Chart extends StatelessWidget {
       for (int i = 0; i < _recentTransactions.length; i++) {
         if (_recentTransactions[i].date.day == weekDay.day &&
             _recentTransactions[i].date.month == weekDay.month &&
-            _recentTransactions[i].date.year == weekDay.year
-        ) {
-            totalSum += _recentTransactions[i].amount;
+            _recentTransactions[i].date.year == weekDay.year) {
+          totalSum += _recentTransactions[i].amount;
         }
       }
 
       return {
-        'Day': DateFormat.E().format(weekDay),
+        'Day': DateFormat.E().format(weekDay).substring(0, 1),
         'amount': totalSum
       };
+    });
+  }
+
+  double get totalSpending {
+    return groupedTransactionValues.fold(0.0, (sum, item) {
+      return sum + item['amount'];
     });
   }
 
@@ -38,9 +42,14 @@ class Chart extends StatelessWidget {
       elevation: 6.0,
       margin: EdgeInsets.all(20.0),
       child: Row(
-        children: <Widget>[
-
-        ],
+        children: groupedTransactionValues.map((el) {
+          return ChartBar(
+              el['day'],
+              el['amount'],
+              totalSpending == 0
+                  ? 0.0
+                  : (el['amount'] as double) / totalSpending);
+        }).toList(),
       ),
     );
   }
