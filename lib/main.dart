@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import './widgets/new_transaction.dart';
-import './models/transaction.dart';
 import './widgets/transaction_list.dart';
+import './models/transaction.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,6 +11,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Time Tracker',
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        accentColor: Colors.amber,
+      ),
       home: MyHomePage(),
     );
   }
@@ -22,23 +26,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  final List<Transaction> _transactions = [
+  final List<Transaction> _userTransactions = [
     Transaction(
-        id: 't1', title: 'new shoes', amount: 12.12, date: DateTime.now()),
-    Transaction(id: 't2', title: 'Grocery', amount: 6.12, date: DateTime.now()),
+      id: 't1',
+      title: 'New Shoes',
+      amount: 69.99,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Weekly Groceries',
+      amount: 16.53,
+      date: DateTime.now(),
+    ),
   ];
 
-  void _addNewTransaction(String title, double amount) {
+  void _addNewTransaction(String txTitle, double txAmount) {
     final newTx = Transaction(
-      title: title,
-      amount: amount,
+      title: txTitle,
+      amount: txAmount,
       date: DateTime.now(),
       id: DateTime.now().toString(),
     );
 
     setState(() {
-      _transactions.add(newTx);
+      _userTransactions.add(newTx);
     });
   }
 
@@ -62,16 +74,18 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: SingleChildScrollView(
         child: Column(
+          // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Container(
               width: double.infinity,
               child: Card(
-                child: Text('CHART'),
+                color: Colors.blue,
+                child: Text('CHART!'),
                 elevation: 5,
               ),
             ),
-            TransactionList(_transactions),
+            TransactionList(_userTransactions),
           ],
         ),
       ),
