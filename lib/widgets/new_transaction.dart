@@ -36,7 +36,6 @@ class _NewTransactionState extends State<NewTransaction> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             TextField(
-              cursorColor: Colors.purple,
               decoration: InputDecoration(labelText: 'Title'),
               controller: _titleController,
               onSubmitted: (_) => submitData(),
