@@ -5,27 +5,28 @@ import './chart_bar.dart';
 import '../models/transaction.dart';
 
 class Chart extends StatelessWidget {
-  final List<Transaction> _recentTransactions;
+  final List<Transaction> recentTransactions;
 
-  Chart(this._recentTransactions);
+  Chart(this.recentTransactions);
 
   List<Map<String, Object>> get groupedTransactionValues {
-    const int numDays = 7;
-    return List.generate(numDays, (index) {
-      final DateTime weekDay = DateTime.now().subtract(Duration(days: index));
-      double totalSum = 0.0;
+    return List.generate(7, (index) {
+      final weekDay = DateTime.now().subtract(
+        Duration(days: index),
+      );
+      var totalSum = 0.0;
 
-      for (int i = 0; i < _recentTransactions.length; i++) {
-        if (_recentTransactions[i].date.day == weekDay.day &&
-            _recentTransactions[i].date.month == weekDay.month &&
-            _recentTransactions[i].date.year == weekDay.year) {
-          totalSum += _recentTransactions[i].amount;
+      for (var i = 0; i < recentTransactions.length; i++) {
+        if (recentTransactions[i].date.day == weekDay.day &&
+            recentTransactions[i].date.month == weekDay.month &&
+            recentTransactions[i].date.year == weekDay.year) {
+          totalSum += recentTransactions[i].amount;
         }
       }
 
       return {
-        'Day': DateFormat.E().format(weekDay).substring(0, 1),
-        'amount': totalSum
+        'day': DateFormat.E().format(weekDay).substring(0, 1),
+        'amount': totalSum,
       };
     });
   }
@@ -39,17 +40,25 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 6.0,
-      margin: EdgeInsets.all(20.0),
-      child: Row(
-        children: groupedTransactionValues.map((el) {
-          return ChartBar(
-              el['day'],
-              el['amount'],
-              totalSpending == 0
-                  ? 0.0
-                  : (el['amount'] as double) / totalSpending);
-        }).toList(),
+      elevation: 6,
+      margin: EdgeInsets.all(20),
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: groupedTransactionValues.map((data) {
+            return Flexible(
+              fit: FlexFit.tight,
+              child: ChartBar(
+                data['day'],
+                data['amount'],
+                totalSpending == 0.0
+                    ? 0.0
+                    : (data['amount'] as double) / totalSpending,
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
