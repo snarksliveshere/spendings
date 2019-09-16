@@ -10,6 +10,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final textScale = MediaQuery.of(context).textScaleFactor;
     return MaterialApp(
       title: 'Personal Expenses',
       theme: ThemeData(
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
                 title: TextStyle(
                   fontFamily: 'OpenSans',
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: 18 * textScale,
                 ),
                 button: TextStyle(
                   color: Colors.white,
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
             textTheme: ThemeData.light().textTheme.copyWith(
                   title: TextStyle(
                     fontFamily: 'OpenSans',
-                    fontSize: 20,
+                    fontSize: 20 * textScale,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
