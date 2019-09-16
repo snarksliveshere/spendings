@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // SystemChrome
+
 
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
 import './widgets/chart.dart';
 import './models/transaction.dart';
 
-void main() => runApp(MyApp());
+//void main() => runApp(MyApp());
+
+void main() {
+  // Forbid Landscape mode!!!
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  runApp(MyApp());
+};
+
+
 
 class MyApp extends StatelessWidget {
   @override
