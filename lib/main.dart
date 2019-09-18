@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 //import 'package:flutter/services.dart'; // SystemChrome
 
 import './widgets/new_transaction.dart';
@@ -123,17 +124,32 @@ class _MyHomePageState extends State<MyHomePage> {
     final mediaQuery = MediaQuery.of(context);
     final bool isLandscape = mediaQuery.orientation == Orientation.landscape;
 
-    final appBar = AppBar(
-      title: Text(
-        'Personal Expenses',
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () => _startAddNewTransaction(context),
-        ),
-      ],
-    );
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text(
+              'Personal Expenses',
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () => _startAddNewTransaction(context),
+                  child: Icon(CupertinoIcons.add),
+                ),
+              ],
+            ),
+          )
+        : AppBar(
+            title: Text(
+              'Personal Expenses',
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => _startAddNewTransaction(context),
+              ),
+            ],
+          );
 
     final Widget txListWidget = Container(
         height: (mediaQuery.size.height -
@@ -142,9 +158,8 @@ class _MyHomePageState extends State<MyHomePage> {
             0.7,
         child: TransactionList(_userTransactions, _deleteTransaction));
 
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
+    var pageBody = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -153,7 +168,10 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Show Chart'),
+                  Text(
+                    'Show Chart',
+                    style: Theme.of(context).textTheme.title,
+                  ),
                   Switch.adaptive(
                     activeColor: Theme.of(context).accentColor,
                     value: _showChart,
@@ -186,13 +204,23 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Platform.isIOS
-          ? Container()
-          : FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () => _startAddNewTransaction(context),
-            ),
     );
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+            navigationBar: appBar,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: pageBody,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    child: Icon(Icons.add),
+                    onPressed: () => _startAddNewTransaction(context),
+                  ),
+          );
   }
 }
